@@ -31,3 +31,4 @@ The code is organized as follows:
         + impute_phvage_multiple_post.R: evaluate the results from the multiple imputations (produces plots)
     + imputations: batch code for running imputation models. This code must be run before running ttar/code/impute_phvage_multiple_post.R
 
+Interactive three-dimensional plots of the results are available at [http://bdsegal.github.io/FLS-bone-strength/](http://bdsegal.github.io/FLS-bone-strength/).
