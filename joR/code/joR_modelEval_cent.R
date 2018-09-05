@@ -22,6 +22,7 @@ if( length(grep("bdsegal",getwd()))>0 ){
 
 # path for paper
 paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/plots_report/all")
+
 # directory with code
 setwd(file.path(computer,"Dropbox/Research/Bones/final_analysis/joR/code"))
 

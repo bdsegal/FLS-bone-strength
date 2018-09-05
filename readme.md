@@ -15,6 +15,7 @@ The code is organized as follows:
         + `exploratory_joR.R`: Assess how well the gamma distribution describes BSI
         + `joR_modelFit*.R`: Fit models with centered and scaled bodysize
         + `joR_modelEval*.R`: Evaluate models with centered and scaled bodysize. These files produce the figures shown in the main paper.
+        + `joR_modelEval_cent_batch.R`: Alternative to `joR_modelEval_cent.R` that is intended for batch submission.
         + `impute_phvage_single.R`: Fit and evaluate the single imputation model
         + `impute_phvage_multiple_post.R`: Evaluate the results from multiple imputations
     + `imputations`: Batch code for running multiple imputations. This code must be run before `joR/code/impute_phvage_multiple_post.R`.
