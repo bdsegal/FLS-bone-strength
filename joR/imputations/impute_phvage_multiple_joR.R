@@ -5,11 +5,6 @@ args <- commandArgs(TRUE)
 
 library(mgcv)
 
-# In this script, we loaded dataSub.Rdata directly, which is produced by
-# the dataPred.R script. This assumes that the dataPrep.R script was already
-# run, and that the dataSub.Rdata file was placed in the corresponding 'data'
-# folder.
-
 # load data -- path on cluster
 load(file.path(dirname(dirname(getwd())),"data", "dataSub.Rdata"))
 

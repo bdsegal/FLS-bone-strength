@@ -39,16 +39,17 @@ source(file.path(dataPrepPath,
 
 # set values for obtaining posterior distributions and making plots ------------
 
-# only run once, then comment out
-# numModels <- rep(NA, length(files))
-# for (i in 1:length(files)){
-#   print(i)
-#   load(file.path(resultsPath, files[i]))
-#   numModels[i] <- length(multImpute)
-# }
-# save(numModels,file="numModels.Rdata")
-load("numModels.Rdata")
-
+if(!"numModels.Rdata" %in% list.files()) {
+  numModels <- rep(NA, length(files))
+  for (i in 1:length(files)){
+    print(i)
+    load(file.path(resultsPath, files[i]))
+    numModels[i] <- length(multImpute)
+  }
+  save(numModels,file="numModels.Rdata")
+} else {
+  load("numModels.Rdata")
+}
 sum(numModels)
 # 512
 

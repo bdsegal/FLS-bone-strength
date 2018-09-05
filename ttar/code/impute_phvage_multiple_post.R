@@ -39,15 +39,17 @@ source(file.path(dataPrepPath,
 
 # set values for obtaining posterior distributions and making plots ------------
 
-# only run once, then comment out
-# numModels <- rep(NA, length(files))
-# for (i in 1:length(files)){
-#   print(i)
-#   load(file.path(resultsPath, files[i]))
-#   numModels[i] <- length(multImpute)
-# }
-# save(numModels,file="numModels.Rdata")
-load("numModels.Rdata")
+if(!"numModels.Rdata" %in% list.files()) {
+  numModels <- rep(NA, length(files))
+  for (i in 1:length(files)){
+    print(i)
+    load(file.path(resultsPath, files[i]))
+    numModels[i] <- length(multImpute)
+  }
+  save(numModels,file="numModels.Rdata")
+} else {
+  load("numModels.Rdata")
+}
 sum(numModels)
 # 591
 
@@ -340,78 +342,3 @@ ggAll <- ggplot(aes(x=skelage, y=mean*100), data=zAll)+
 dev.new(height=3.5, width=7.25)
 ggAll
 ggsave(file.path(paperPath, "m1ttarCentPhvageMultImputepc.png"))
-
-# # dist'n of betas --------------------------------------------------------------
-# betaMat <- matrix(nrow=150, ncol=sum(numModels))
-# count <- 1
-# for (i in 1:length(files)){
-#   print(i)
-#   load(file.path(resultsPath, files[i]))
-#   M <- length(multImpute)
-  
-#   for (m in 1:M){
-#     betaMat[,count] <- coef(multImpute[[m]])
-#     count <- count + 1
-#   }
-# }
-# dimnames(betaMat) <- list(beta=1:150, impute=1:sum(numModels))
-# betaMatM <- melt(betaMat)
-
-# ggplot(aes(x=beta, y=value, group=impute), data=betaMatM)+
-#   geom_point()+
-#   theme_bw(22)+
-#   labs(x="",y=expression(hat(beta)))+
-#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
-# ggsave(file.path(paperPath, "ImputeBetas_ttar.png"))
-
-# ggplot(aes(x=beta, y=log(abs(value), 10), group=impute), data=betaMatM)+
-#   geom_point()+
-#   theme_bw(22)+
-#   labs(x="",y=expression(paste("lo",g[10],"(|",hat(beta),"|)", sep="")))+
-#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))+
-#   scale_color_manual(guide=FALSE)
-# ggsave(file.path(paperPath, "ImputeBetasLog_ttar.png"))
-
-# # as box plots
-# ggplot(aes(x=as.factor(beta), y=log(abs(value), 10)), data=betaMatM)+
-#   geom_boxplot()
-#   theme_bw(18)
-#   labs(x="",y=expression(hat(beta)))+
-#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
-
-# # 3d plots ---------------------------------------------------------------------
-# alphaPlot=0.7
-
-# i=1
-# colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, 
-#   seq(0,1,.001)))]
-# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
-
-# open3d()
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
-# main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", 
-#   sep=""), xlab="skeleton age", ylab="birthday", zlab="ttar", zlim=zMinMax, 
-#   add=FALSE)
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, 
-#   col="grey", alpha=alphaPlot)
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, 
-#   col="grey", alpha=alphaPlot)
-
-# # partial derivative with respect to birthday
-
-# i=1
-# colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, 
-#   seq(0,1,.001)))]
-# zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
-
-# open3d()
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, 
-#   col=colors, main=paste(names(outd$z)[i],": ", (1-outd$alpha)*100,
-#     "% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday",
-#     zlab="ttar", zlim=zMinMax, add=FALSE)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE,
-#   col="grey", alpha=alphaPlot)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE,
-#   col="grey", alpha=alphaPlot)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, 
-#   z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)

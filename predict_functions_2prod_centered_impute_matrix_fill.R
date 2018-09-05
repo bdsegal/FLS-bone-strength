@@ -331,5 +331,3 @@ sliceFun <- function(out, i, skelage = seq(8,18,2)){
   
   return(slice)
 }
-
-

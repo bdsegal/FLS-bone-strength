@@ -187,9 +187,6 @@ png(file.path(paperPath,'m1centPhvageImputeResid.png'))
 plot(m1centPhvageImpute$lme)
 dev.off()
 
-# qqnorm(residuals(m1cent$gam, type="deviance"))
-
-
 # plots of change over birthday ---------------------------------------------------   
 
 alpha=0.05
@@ -292,32 +289,3 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
     scale_y_continuous(lim=c(-0.9, 0.9), breaks=seq(-0.8,0.8,0.4))
 ggsave(file.path(paperPath, "m1centPhvageImputeFemaleDer.png"))
-
-
-# # 3d plots
-# alphaPlot=0.7
-
-# i=2
-# colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, seq(0,1,.001)))]
-# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
-
-# open3d()
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
-# main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
-# zlim=zMinMax, add=FALSE)
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
-# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
-
-# # partial derivative with respect to birthday
-
-# i=2
-# colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, seq(0,1,.001)))]
-# zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
-
-# open3d()
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, col=colors, 
-# main=paste(names(outd$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
-# zlim=zMinMax, add=FALSE)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
-# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)

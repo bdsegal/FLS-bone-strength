@@ -3,7 +3,6 @@
 # with centered body size and a GLM with log link
 # Used by 'joR_modelEval_cent.R' and 'ttar_modelEval_cent.R')
 
-# (might already be loaded)
 library(reshape2)
 library(cubature)
 
