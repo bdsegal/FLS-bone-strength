@@ -19,7 +19,7 @@ rmvn <- function(n,mu,sig) { ## MVN random deviates
   (mu + L%*%matrix(rnorm(m*n),m,n)) 
 }
 
-plotTrend1 <- function(fit, skelagePred=seq(6,18, 2), 
+plotTrend1 <- function(fit, skelagePred=seq(8,18, 2), 
   birthdayPred=seq(1930,2000, 0.5), B=1000, cti=FALSE){
 
   # produces regression surface without random effects
@@ -93,7 +93,7 @@ plotTrend1 <- function(fit, skelagePred=seq(6,18, 2),
   return(list(simMale=simMale, simFemale=simFemale))
 }
 
-plotDerivative1 <- function(fit, skelagePred=seq(6,18,2), 
+plotDerivative1 <- function(fit, skelagePred=seq(8,18,2), 
   birthdayPred=seq(1930,2000,0.5), B=10000, eps=1e-7, cti=FALSE){
 
   # produces partial derivative of regression surface wrt birthday
@@ -201,7 +201,7 @@ plotDerivative1 <- function(fit, skelagePred=seq(6,18,2),
 }
 
 plotPerChange1 <- function(fit, initialBirthday=1930, endBirthday=1995, 
-  skelagePred=seq(6,18,.1), B=10000, cti=FALSE){
+  skelagePred=seq(8,18,.1), B=10000, cti=FALSE){
 
   # produces percent change
 

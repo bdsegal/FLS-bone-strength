@@ -1,3 +1,0 @@
-# submit the following for args 1 through 20
-
-nohup nice R CMD BATCH --no-save '--args 1' impute_phvage_multiple_cti.R &

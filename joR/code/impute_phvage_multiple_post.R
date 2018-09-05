@@ -6,9 +6,7 @@
 
 library(mgcv)
 library(bigmemory)
-
 library(ggplot2)
-library(rgl)
 
 # set paths and load functions and data ----------------------------------------
 
@@ -24,8 +22,7 @@ if( length(grep("bdsegal",getwd()))>0 ){
   path <- "C:/Users/Segal/Documents/Research/Bones/data"
 }
 
-paperPath <- file.path(computer,
-  "Dropbox/Research/Bones/final_analysis/joR/paper")
+paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/plots_report/all")
 
 setwd(file.path(computer,"Dropbox/Research/Bones/final_analysis/joR"))
 resultsPath <- file.path(getwd(), "imputations")
@@ -55,9 +52,9 @@ load("numModels.Rdata")
 sum(numModels)
 # 512
 
-skelagePred <- seq(6,18, 2)
-skelagePredPc <- seq(6,18,.1)
-birthdayPred <- seq(1930,2000, 0.5)
+skelagePred <- seq(8, 18, 2)
+skelagePredPc <- seq(8, 18, 0.1)
+birthdayPred <- seq(1930, 2000, 0.5)
 nSkelage <- length(skelagePred)
 
 B=1000
@@ -67,7 +64,7 @@ n <- sum(numModels)*B
 initialBirthday <- 1930
 endBirthday <- 2000
 
-alpha <- 0.01
+alpha <- 0.05
 
 # matrices for storing posterior estimates (too big for RAM)
 trendMale <- big.matrix(nrow=n,
@@ -120,8 +117,8 @@ for (i in 1:length(files)){
     names(phvageCentSex) <- c("Female","Male")
 
     trendTemp <- plotTrend1(multImpute[[m]], B=B,
-      skelagePred=skelagePred,
-      birthdayPred=birthdayPred)
+                            skelagePred=skelagePred,
+                            birthdayPred=birthdayPred)
 
     trendMale[((count-1)*B +1):(count*B),] <- t(trendTemp$simMale)
     trendFemale[((count-1)*B +1):(count*B),] <- t(trendTemp$simFemale)
@@ -181,6 +178,39 @@ z <- list()
 out <- list(z=z, skelagePred=skelagePred, birthdayPred=birthdayPred,
   alpha=alpha)
 
+# 2d plots: mean trend
+slice <- sliceFun(out, i=1)
+dev.new(width=10, height=3.5)
+ggplot(aes(x=birthday, y=mean), data=slice)+
+    geom_line()+
+    geom_line(aes(y=l),linetype="dashed")+
+    geom_line(aes(y=u),linetype="dashed")+
+    theme_bw(17)+
+    facet_grid(~skelage)+
+    labs(y="BSI", x="Birthdate")+
+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    scale_x_continuous(breaks=seq(1930,2000,10),
+      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
+    scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
+ggsave(file.path(paperPath, "m1centPhvageMultImputeMaleMean_joR.png"))
+
+slice <- sliceFun(out, i=2)
+dev.new(width=10, height=3.5)
+ggplot(aes(x=birthday, y=mean), data=slice)+
+    geom_line()+
+    geom_line(aes(y=l),linetype="dashed")+
+    geom_line(aes(y=u),linetype="dashed")+
+    theme_bw(17)+
+    facet_grid(~skelage)+
+    labs(y="BSI", x="Birthdate")+
+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    scale_x_continuous(breaks=seq(1930,2000,10),
+      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
+    scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
+ggsave(file.path(paperPath, "m1centPhvageMultImputeFemaleMean_joR.png"))
+
 # get quantiles for derivative -------------------------------------------------
 derivMale <- attach.big.matrix("derivMale.desc")
 derivFemale <- attach.big.matrix("derivFemale.desc")
@@ -218,6 +248,45 @@ z <- list()
 
 outd <- list(z=z, skelagePred=skelagePred, birthdayPred=birthdayPred,
   alpha=alpha)
+
+# 2d plots: derivatives
+slice <- sliceFun(outd, i=1)
+dev.new(width=10, height=3.5)
+ggplot(aes(x=birthday, y=mean), data=slice)+
+    geom_line()+
+    geom_line(aes(y=l),linetype="dashed")+
+    geom_line(aes(y=u),linetype="dashed")+
+    geom_hline(yintercept=0, color="red")+
+    theme_bw(17)+
+    facet_grid(~skelage)+
+    labs(y=expression(paste(partialdiff," BSI / ", 
+          partialdiff," birthdate", sep="")), 
+        x="Birthdate")+
+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    scale_x_continuous(breaks=seq(1930,2000,10),
+      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
+    scale_y_continuous(lim=c(-0.9, 0.9), breaks=seq(-0.8,0.8,0.4))
+ggsave(file.path(paperPath, "m1centPhvageMultImputeMaleDer_joR.png"))
+
+slice <- sliceFun(outd, i=2)
+dev.new(width=10, height=3.5)
+ggplot(aes(x=birthday, y=mean), data=slice)+
+    geom_line()+
+    geom_line(aes(y=l),linetype="dashed")+
+    geom_line(aes(y=u),linetype="dashed")+
+    geom_hline(yintercept=0, color="red")+
+    theme_bw(17)+
+    facet_grid(~skelage)+
+    labs(y=expression(paste(partialdiff," BSI / ", 
+          partialdiff," birthdate", sep="")), 
+        x="Birthdate")+
+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    scale_x_continuous(breaks=seq(1930,2000,10),
+      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
+    scale_y_continuous(lim=c(-0.9, 0.9), breaks=seq(-0.8,0.8,0.4))
+ggsave(file.path(paperPath, "m1centPhvageMultImputeFemaleDer_joR.png"))
 
 # get quantities for percent change --------------------------------------------
 pcMale <- attach.big.matrix("pcMale.desc")
@@ -273,153 +342,80 @@ dev.new(height=3.5, width=7)
 ggAll
 ggsave(file.path(paperPath, "m1centPhvageMultImputepc_joR.png"))
 
-# 2d plots: mean trend
-slice <- sliceFun(out, i=1)
-dev.new(width=10, height=3.5)
-ggplot(aes(x=birthday, y=mean), data=slice)+
-    geom_line()+
-    geom_line(aes(y=l),linetype="dashed")+
-    geom_line(aes(y=u),linetype="dashed")+
-    theme_bw(17)+
-    facet_grid(~skelage)+
-    labs(y="BSI", x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-    scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
-    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
-    scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
-ggsave(file.path(paperPath, "m1centPhvageMultImputeMaleMean_joR.png"))
+# # dist'n of betas -------------------------------------------------------------
+# library(reshape2)
 
-slice <- sliceFun(out, i=2)
-dev.new(width=10, height=3.5)
-ggplot(aes(x=birthday, y=mean), data=slice)+
-    geom_line()+
-    geom_line(aes(y=l),linetype="dashed")+
-    geom_line(aes(y=u),linetype="dashed")+
-    theme_bw(17)+
-    facet_grid(~skelage)+
-    labs(y="BSI", x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-    scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
-    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
-    scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
-ggsave(file.path(paperPath, "m1centPhvageMultImputeFemaleMean_joR.png"))
-
-# 2d plots: derivatives
-slice <- sliceFun(outd, i=1)
-dev.new(width=10, height=3.5)
-ggplot(aes(x=birthday, y=mean), data=slice)+
-    geom_line()+
-    geom_line(aes(y=l),linetype="dashed")+
-    geom_line(aes(y=u),linetype="dashed")+
-    geom_hline(yintercept=0, color="red")+
-    theme_bw(17)+
-    facet_grid(~skelage)+
-    labs(y=expression(paste(partialdiff," BSI / ", 
-          partialdiff," birthday", sep="")), 
-        x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-    scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
-    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
-    scale_y_continuous(lim=c(-0.9, 0.9), breaks=seq(-0.8,0.8,0.4))
-ggsave(file.path(paperPath, "m1centPhvageMultImputeMaleDer_joR.png"))
-
-slice <- sliceFun(outd, i=2)
-dev.new(width=10, height=3.5)
-ggplot(aes(x=birthday, y=mean), data=slice)+
-    geom_line()+
-    geom_line(aes(y=l),linetype="dashed")+
-    geom_line(aes(y=u),linetype="dashed")+
-    geom_hline(yintercept=0, color="red")+
-    theme_bw(17)+
-    facet_grid(~skelage)+
-    labs(y=expression(paste(partialdiff," BSI / ", 
-          partialdiff," birthday", sep="")), 
-        x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-    scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
-    theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
-    scale_y_continuous(lim=c(-0.9, 0.9), breaks=seq(-0.8,0.8,0.4))
-ggsave(file.path(paperPath, "m1centPhvageMultImputeFemaleDer_joR.png"))
-
-
-# dist'n of betas -------------------------------------------------------------
-library(reshape2)
-
-betaMat <- matrix(nrow=150, ncol=sum(numModels))
-count <- 1
-for (i in 1:length(files)){
-  print(i)
-  load(file.path(resultsPath, files[i]))
-  M <- length(multImpute)
+# betaMat <- matrix(nrow=150, ncol=sum(numModels))
+# count <- 1
+# for (i in 1:length(files)){
+#   print(i)
+#   load(file.path(resultsPath, files[i]))
+#   M <- length(multImpute)
   
-  for (m in 1:M){
-    betaMat[,count] <- coef(multImpute[[m]])
-    count <- count + 1
-  }
-}
-dimnames(betaMat) <- list(beta=1:150, impute=1:sum(numModels))
-betaMatM <- melt(betaMat)
+#   for (m in 1:M){
+#     betaMat[,count] <- coef(multImpute[[m]])
+#     count <- count + 1
+#   }
+# }
+# dimnames(betaMat) <- list(beta=1:150, impute=1:sum(numModels))
+# betaMatM <- melt(betaMat)
 
-ggplot(aes(x=beta, y=value, group=impute), data=betaMatM)+
-  geom_point()+
-  theme_bw(22)+
-  labs(x="",y=expression(hat(beta)))+
-  geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
-ggsave(file.path(paperPath, "ImputeBetas_joR.png"))
+# ggplot(aes(x=beta, y=value, group=impute), data=betaMatM)+
+#   geom_point()+
+#   theme_bw(22)+
+#   labs(x="",y=expression(hat(beta)))+
+#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
+# ggsave(file.path(paperPath, "ImputeBetas_joR.png"))
 
-ggplot(aes(x=beta, y=log(abs(value), 10), group=impute), data=betaMatM)+
-  geom_point()+
-  theme_bw(22)+
-  labs(x="",y=expression(paste("lo",g[10],"(|",hat(beta),"|)", sep="")))+
-  geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))+
-  scale_color_manual(guide=FALSE)
-ggsave(file.path(paperPath, "ImputeBetasLog_joR.png"))
+# ggplot(aes(x=beta, y=log(abs(value), 10), group=impute), data=betaMatM)+
+#   geom_point()+
+#   theme_bw(22)+
+#   labs(x="",y=expression(paste("lo",g[10],"(|",hat(beta),"|)", sep="")))+
+#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))+
+#   scale_color_manual(guide=FALSE)
+# ggsave(file.path(paperPath, "ImputeBetasLog_joR.png"))
 
-# as box plots
-ggplot(aes(x=as.factor(beta), y=log(value, 10)), data=betaMatM)+
-  geom_boxplot()
-  theme_bw(22)
-  labs(x="",y=expression(hat(beta)))+
-  geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
+# # as box plots
+# ggplot(aes(x=as.factor(beta), y=log(value, 10)), data=betaMatM)+
+#   geom_boxplot()
+#   theme_bw(22)
+#   labs(x="",y=expression(hat(beta)))+
+#   geom_vline(xintercept=c(1.5, seq(25,150,25)+.5))
 
 
-# 3d plots ---------------------------------------------------------------------
-alphaPlot=0.7
+# # 3d plots ---------------------------------------------------------------------
+# alphaPlot=0.7
 
-i=1
-colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, 
-  seq(0,1,.001)))]
-zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
+# i=1
+# colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, 
+#   seq(0,1,.001)))]
+# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
 
-open3d()
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
-main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", 
-  sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R", zlim=zMinMax, 
-  add=FALSE)
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, 
-  col="grey", alpha=alphaPlot)
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, 
-  col="grey", alpha=alphaPlot)
+# open3d()
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
+# main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", 
+#   sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R", zlim=zMinMax, 
+#   add=FALSE)
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, 
+#   col="grey", alpha=alphaPlot)
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, 
+#   col="grey", alpha=alphaPlot)
 
-# partial derivative with respect to birthday
+# # partial derivative with respect to birthday
 
-i=1
-colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, 
-  seq(0,1,.001)))]
-zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
+# i=1
+# colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, 
+#   seq(0,1,.001)))]
+# zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
 
-open3d()
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, 
-  col=colors, main=paste(names(outd$z)[i],": ", (1-outd$alpha)*100,
-    "% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday",
-    zlab="jo/R", zlim=zMinMax, add=FALSE)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE,
-  col="grey", alpha=alphaPlot)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE,
-  col="grey", alpha=alphaPlot)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, 
-  z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)
+# open3d()
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, 
+#   col=colors, main=paste(names(outd$z)[i],": ", (1-outd$alpha)*100,
+#     "% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday",
+#     zlab="jo/R", zlim=zMinMax, add=FALSE)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE,
+#   col="grey", alpha=alphaPlot)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE,
+#   col="grey", alpha=alphaPlot)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, 
+#   z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)

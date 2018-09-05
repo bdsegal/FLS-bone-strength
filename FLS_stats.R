@@ -56,11 +56,56 @@ sampleStats
 # families             209      177
 # total observations 16937    10280
 
+table(dataSub$sex)
+# Female   Male 
+#   4894   5386
 
 obsPerSubj <- summarise(group_by(dataSub, ptno),
     count = n(),
-    sex = sex[1]
-)
+    sex = first(sex), 
+    phvage = first(phvage),
+    birthday=first(birthday)
+  )
+
+dataSub$isnaPhvage <- is.na(dataSub$phvage)
+dataSub$birthdayPre1995 <- (dataSub$birthday < 1995)
+
+obsPerSubj$isnaPhvage <- is.na(obsPerSubj$phvage)
+obsPerSubj$birthdayPre1995 <- (obsPerSubj$birthday < 1995)
+
+# number of subjects with missing phvage (TRUE=missing)
+table(is.na(obsPerSubj$phvage))
+# FALSE  TRUE 
+#   689   404 
+
+xtabs(~ isnaPhvage + sex, data=obsPerSubj)
+#           sex
+# isnaPhvage Female Male
+#      FALSE    346  343
+#      TRUE     188  216
+
+# number of observations with missing phvage (TRUE=missing)
+table(is.na(dataSub$phvage))
+# FALSE  TRUE 
+#  8895  1385 
+
+xtabs(~ isnaPhvage + sex, data=dataSub)
+#           sex
+# isnaPhvage Female Male
+#      FALSE   4290 4605
+#      TRUE     604  781
+
+xtabs(~ isnaPhvage + birthdayPre1995, data=obsPerSubj)
+#           birthdayPre1995
+# isnaPhvage FALSE TRUE
+#      FALSE     5  684
+#      TRUE    101  303
+
+xtabs(~ isnaPhvage + birthdayPre1995, data=dataSub)
+#           birthdayPre1995
+# isnaPhvage FALSE TRUE
+#      FALSE    37 8858
+#      TRUE    315 1070
 
 ggplot(aes(x = count), data=obsPerSubj) +
     geom_histogram(breaks=0:max(obsPerSubj$count))+

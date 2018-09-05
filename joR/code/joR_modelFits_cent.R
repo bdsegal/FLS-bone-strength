@@ -3,6 +3,7 @@
 # 2) with phvage and various sample restrictions
 
 library(mgcv)
+library(dplyr)
 
 # set computer-specific paths (note: 'path' points to the folder
 # containing the data, and is used in 'data_prep.R')
@@ -24,7 +25,10 @@ paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/joR/paper
 setwd(file.path(computer,"Dropbox/Research/Bones/final_analysis/joR/code"))
 dataPrepPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis")
 
-# prep data
+# load functions for obtaining predictions and integrals
+source(file.path(dataPrepPath,"predict_functions_2prod_centered.R"))
+
+# prep/load data
 source(file.path(dataPrepPath,"data_prep.R"))
 
 # 1) Different random effect structures ---------------------------------------
@@ -87,7 +91,6 @@ m4cent <- gamm(joR ~
   # message = false convergence (8)
         
 # save(m4cent, file="m4cent.Rdata")  
-
 
 m5cent <- gamm(joR ~ 
 				te(skelage, birthday, k=c(5,5), bs="cr")+

@@ -18,7 +18,7 @@ if( length(grep("bdsegal",getwd()))>0 ){
 }
 
 # path for paper
-paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/ttar/paper")
+paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/plots_report/all")
 # directory with code
 setwd(file.path(computer,"Dropbox/Research/Bones/final_analysis/ttar/code"))
 dataPrepPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis")
@@ -37,7 +37,6 @@ m1ttarCent <- gamm(ttar ~
 				family=Gamma(link=log),
 				random=list(pedno=~1, ptno=~1),
 				data=dataSub)
-
 save(m1ttarCent, file="m1ttarCent.Rdata")
 
 m2ttarCent <- gamm(ttar ~ 
@@ -48,7 +47,6 @@ m2ttarCent <- gamm(ttar ~
 				family=Gamma(link=log),
 				random=list(pedno=~1, ptno=~1 + skelage),
 				data=dataSub)
-     
 save(m2ttarCent, file="m2ttarCent.Rdata")  
 
 m3ttarCent <- gamm(ttar ~ 
@@ -59,7 +57,6 @@ m3ttarCent <- gamm(ttar ~
 				family=Gamma(link=log),
 				random=list(ptno=~1),
 				data=dataSub)
-        
 save(m3ttarCent, file="m3ttarCent.Rdata")  
 
 m4ttarCent <- gamm(ttar ~ 
@@ -70,9 +67,7 @@ m4ttarCent <- gamm(ttar ~
 				family=Gamma(link=log),
 				random=list(ptno=~1 + skelage),
 				data=dataSub)
-
 save(m4ttarCent, file="m4ttarCent.Rdata")  
-
 
 m5ttarCent <- gamm(ttar ~ 
 				te(skelage, birthday, k=c(5,5), bs="cr")+
@@ -82,7 +77,6 @@ m5ttarCent <- gamm(ttar ~
 				family=Gamma(link=log),
 				random=list(pedno=~1 + skelage, ptno=~1),
 				data=dataSub)
-  
 save(m5ttarCent, file="m5ttarCent.Rdata")  
   
 m6ttarCent <- gamm(ttar ~ 
@@ -116,7 +110,7 @@ m7ttarCent <- gamm(ttar ~
 # save(m7ttarCent, file="m7ttarCent.Rdata")  
 
 # m3 with gamm4
-# scaled covariates, took LONG time to run
+# took LONG time to run
 library(gamm4)
 mgamm4cent <- gamm4(ttar ~ 
 				t2(skelage, birthday, k=c(5,5), bs="cr")+

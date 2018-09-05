@@ -1,0 +1,47 @@
+# Cortical area
+
+Call:
+lm(formula = cortArea ~ birthDecade * skelageRound, data = sub)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-16.5808  -3.5235  -0.2178   2.7242  26.5887 
+
+Coefficients:
+                                            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                                  20.5631     0.4202  48.934  <2e-16 ***
+birthDecade1990                              -1.0346     1.0886  -0.950 0.342
+skelageRoundSkeleton age 18                  20.5359     0.7061  29.083  <2e-16 ***
+birthDecade1990:skelageRoundSkeleton age 18   1.5711     1.3791   1.139 0.255 
+
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 6.19 on 467 degrees of freedom
+Multiple R-squared:  0.7413,  Adjusted R-squared:  0.7397 
+F-statistic: 446.1 on 3 and 467 DF,  p-value: < 2.2e-16
+
+
+
+# CTI
+
+Call:
+lm(formula = mc2tci ~ birthDecade * skelageRound, data = sub)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.201481 -0.045843  0.000932  0.042653  0.274080 
+
+Coefficients:
+                                             Estimate Std. Error t value Pr(>|t|) 
+(Intercept)                                  0.463294   0.005009  92.487  < 2e-16 ***
+birthDecade1990                             -0.048257   0.012976  -3.719 0.000224 ***
+skelageRoundSkeleton age 18                  0.083169   0.008417   9.881  < 2e-16 ***
+birthDecade1990:skelageRoundSkeleton age 18  0.078229   0.016440   4.758 2.61e-06 ***
+
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.07379 on 467 degrees of freedom
+Multiple R-squared:  0.3524,	Adjusted R-squared:  0.3482 
+F-statistic: 84.71 on 3 and 467 DF,  p-value: < 2.2e-16

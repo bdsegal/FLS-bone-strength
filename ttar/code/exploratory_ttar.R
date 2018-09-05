@@ -1,4 +1,4 @@
-# Exploratory plots for distribution of jo/R (BSI)
+# Exploratory plots for distribution of total area (ttar)
 
 library(mgcv)
 
@@ -55,13 +55,13 @@ normalOverlay <- function(x, variable_name, b = 25){
   qqline(x, distribution = function(p) qnorm(p, mean = mu, sd = sigma), col = "red")
 }
 
-gammaOverlay(data$joR[which(data$targage==8 & data$sex == "Male")], "BSI")
-gammaOverlay(data$joR[which(data$targage==18 & data$sex == "Male")], "BSI")
+gammaOverlay(dataSub$ttar[which(dataSub$targage==8 & dataSub$sex == "Male")], "TTAR")
+gammaOverlay(dataSub$ttar[which(dataSub$targage==18 & dataSub$sex == "Male")], "TTAR")
 
-gammaOverlay(data$joR[which(data$targage==8 & data$sex == "Female")], "BSI")
-gammaOverlay(data$joR[which(data$targage==18 & data$sex == "Female")], "BSI")
+gammaOverlay(dataSub$ttar[which(dataSub$targage==8 & dataSub$sex == "Female")], "TTAR")
+gammaOverlay(dataSub$ttar[which(dataSub$targage==18 & dataSub$sex == "Female")], "TTAR")
 
-m1cent <- gamm(joR ~ 
+m1ttarCent <- gamm(ttar ~ 
         te(skelage, birthday, k=c(5,5), bs="cr")+
         te(skelage, birthday, k=c(5,5), by=male, bs="cr")+
         te(skelage, birthday, k=c(5,5), by=bodysizeCentered, bs="cr")+
@@ -70,19 +70,13 @@ m1cent <- gamm(joR ~
         random=list(pedno=~1, ptno=~1),
         data=dataSub)
 
-# or, after running joR_modelFits, load m1cent
-# load(file.path("joR","code","m1cent.Rdata"))
+# or, after running ttar_modelFits, load m1ttarcent
+# load(file.path("ttar","code","m1ttarCent.Rdata"))
 
-dataSub$expectedVals <- exp(predict(m1cent$lme))
-dataSub$errors <- with(dataSub, joR - expectedVals)
+dataSub$expectedVals <- exp(predict(m1ttarCent$lme))
+dataSub$errors <- with(dataSub, ttar - expectedVals)
 
-residFit <- lm(log(dataSub$errors^2) ~ log(dataSub$expectedVals))
-coef(residFit)
-      # (Intercept) log(dataSub$expectedVals) 
-      #   -6.250598                  1.935344 
-
-normalOverlay(log(data$joR[which(data$targage==8 & data$sex == "Male")]), "log(BSI)")
-normalOverlay(log(data$joR[which(data$targage==18 & data$sex == "Male")]), "log(BSI)")
-
-normalOverlay(log(data$joR[which(data$targage==8 & data$sex == "Female")]), "log(BSI)")
-normalOverlay(log(data$joR[which(data$targage==18 & data$sex == "Female")]), "log(BSI)")
+m1 <- lm(log(dataSub$errors^2) ~ log(dataSub$expectedVals))
+coef(m1)
+              # (Intercept) log(dataSub$expectedVals) 
+              #   -7.270134                  1.944297 

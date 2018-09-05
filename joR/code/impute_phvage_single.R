@@ -21,21 +21,23 @@ if( length(grep("bdsegal",getwd()))>0 ){
 }
 
 # path for paper
-paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/joR/paper")
+paperPath <- file.path(computer,"Dropbox/Research/Bones/final_analysis/plots_report/all")
 
 # directory with code
 setwd(file.path(computer,"Dropbox/Research/Bones/final_analysis/joR/code"))
 dataPrepPath <- dirname(dirname(getwd()))
 
-# prep data
-source(file.path(dataPrepPath,"data_prep.R"))
-
 # load functions for obtaining predictions
 source(file.path(dataPrepPath,"predict_functions_2prod_centered.R"))
+
+# prep/load data
+source(file.path(dataPrepPath,"data_prep.R"))
 
 # indicator variable for missing, and indices of missingness
 dataSub$phvageMiss <- is.na(dataSub$phvage)
 phvageNA <- which(dataSub$phvageMiss)
+
+length(phvageNA)
 
 # histogram of subjects with and without phvage
 dataSubSubj <- dataSub %>% group_by(ptno) %>%
@@ -51,7 +53,7 @@ ggplot(aes(birthday), data=dataSubSubj)+
   geom_histogram()+
   theme_bw(20)+
   facet_grid(phvageObs~sex)+
-  labs(x="Birthday", y="Number of subjects")
+  labs(x="Birthdate", y="Number of subjects")
 ggsave(file.path(paperPath,"bday_phvageNA.png"))
 
 dev.new(width=6, height=5)
@@ -60,7 +62,7 @@ ggplot(aes(x=birthday, y=phvage), data=dataSub)+
   geom_smooth(method="gam")+
   facet_wrap(~sex)+
   theme_bw(20)+
-  labs(x="Birthday", y="Peak height velocity age")
+  labs(x="Birthdate", y="Peak height velocity age")
 ggsave(file.path(paperPath,"phvage_bday.png"))
 
 # no random effects
@@ -131,7 +133,7 @@ qplot(x=birthday, y=phvage, data=dataSubj)+
   geom_smooth(method="gam")+
   facet_wrap(~sex)+
   theme_bw(20)+
-  labs(y="Peak height velocity age", x="Birthday")+
+  labs(y="Peak height velocity age", x="Birthdate")+
   scale_color_manual("", labels=c("Observed","Imputed"), values=c("black","red"))
 ggsave(file.path(paperPath, "phvage_postImpute.png"))
 
@@ -178,7 +180,7 @@ ggplot(aes(x=skelage, y=BSI, group=ptno, color=birthday),data=dataMelt)+
   theme_bw(18)+
   facet_grid(sex ~ variable)+
   labs(y="BSI", x="Skeletal age")+
-  scale_color_continuous("Birthday")
+  scale_color_continuous("Birthdate")
 ggsave(file.path(paperPath, "m1centPhvageImpute.png"))
 
 png(file.path(paperPath,'m1centPhvageImputeResid.png'))
@@ -190,7 +192,7 @@ dev.off()
 
 # plots of change over birthday ---------------------------------------------------   
 
-alpha=0.01
+alpha=0.05
 
 # percent change
 pc <- plotPerChange(m1centPhvageImpute, initialBirthday=1930, endBirthday=2000, alpha=alpha)
@@ -199,8 +201,29 @@ pc$ggAll
 ggsave(file.path(paperPath, "m1centPhvageImputepc.png"))
 
 # m1centPhvageImpute -------------------------------------------------
-out <- plotTrend(m1centPhvageImpute, alpha=alpha, birthdayPred=seq(1930, 2000, 0.5))
-outd <- plotDerivative(m1centPhvageImpute, alpha=alpha, birthdayPred=seq(1930, 2000, 0.5))
+vc <- VarCorr(m1centPhvageImpute$lme)
+sigmaPedOutcome <- as.numeric(vc[which(grepl("pedno", rownames(vc))) + 1, 2])
+sigmaPtnoOutcome <- as.numeric(vc[which(grepl("ptno", rownames(vc))) + 1, 2])
+sigmaOutcome <- diag(c(sigmaPedOutcome, sigmaPtnoOutcome)^2)
+
+out <- plotTrend(fit0 = m1centPhvageImpute,
+                 alpha = alpha,
+                 birthdayPred = seq(1930, 2000, 0.5),
+                 sigmaOutcome = sigmaOutcome,
+
+                 integrateRandomEffects = "MC",
+                 Bmc = 1000)
+
+outd <- plotDerivative(fit0 = m1centPhvageImpute,
+                       alpha = alpha,
+                       birthdayPred = seq(1930, 2000, 0.5),
+                       sigmaOutcome = sigmaOutcome,
+                       logdetOutcome = logdetOutcome,
+                       limOutcome = limOutcome,
+                       integrateRandomEffects = "MC",
+                       Bmc = 1000)
+
+save(out, outd, file = "out_outd_BSI_single_impute.Rdata")
 
 # mean trend
 slice <- sliceFun(out, i=1)
@@ -211,10 +234,9 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     geom_line(aes(y=u),linetype="dashed")+
     theme_bw(17)+
     facet_grid(~skelage)+
-    labs(y="BSI", x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    labs(y="BSI", x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+                       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
     scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
 ggsave(file.path(paperPath, "m1centPhvageImputeMaleMean.png"))
@@ -227,10 +249,9 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     geom_line(aes(y=u),linetype="dashed")+
     theme_bw(17)+
     facet_grid(~skelage)+
-    labs(y="BSI", x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+    labs(y="BSI", x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
-      labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
+                       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
     scale_y_continuous(lim=c(0,145), breaks=seq(0,140,20))
 ggsave(file.path(paperPath, "m1centPhvageImputeFemaleMean.png"))
@@ -246,9 +267,8 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
-          partialdiff," birthday", sep="")), 
-        x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+                            partialdiff," birthdate", sep="")), 
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -265,9 +285,8 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
-          partialdiff," birthday", sep="")), 
-        x="Birthday")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+                            partialdiff," birthdate", sep="")), 
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -275,30 +294,30 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
 ggsave(file.path(paperPath, "m1centPhvageImputeFemaleDer.png"))
 
 
-# 3d plots
-alphaPlot=0.7
+# # 3d plots
+# alphaPlot=0.7
 
-i=2
-colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, seq(0,1,.001)))]
-zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
+# i=2
+# colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, seq(0,1,.001)))]
+# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
 
-open3d()
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
-main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
-zlim=zMinMax, add=FALSE)
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
-persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
+# open3d()
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$mean, col=colors, 
+# main=paste(names(out$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
+# zlim=zMinMax, add=FALSE)
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
+# persp3d(x=out$skelagePred, y=out$birthdayPred, z=out$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
 
-# partial derivative with respect to birthday
+# # partial derivative with respect to birthday
 
-i=2
-colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, seq(0,1,.001)))]
-zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
+# i=2
+# colors <- heat.colors(1000)[cut(outd$z[[i]]$mean, quantile(outd$z[[i]]$mean, seq(0,1,.001)))]
+# zMinMax <- c(min(outd$z[[i]]$l), max(outd$z[[i]]$u))
 
-open3d()
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, col=colors, 
-main=paste(names(outd$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
-zlim=zMinMax, add=FALSE)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
-persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)
+# open3d()
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$mean, col=colors, 
+# main=paste(names(outd$z)[i],": ", (1-out$alpha)*100,"% credible Intervals", sep=""), xlab="skeleton age", ylab="birthday", zlab="jo/R",
+# zlim=zMinMax, add=FALSE)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$l, add=TRUE, col="grey", alpha=alphaPlot)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=outd$z[[i]]$u, add=TRUE, col="grey", alpha=alphaPlot)
+# persp3d(x=outd$skelagePred, y=outd$birthdayPred, z=array(0,dim=dim(outd$z[[i]]$mean)), add=TRUE, col="grey", alpha=1)
