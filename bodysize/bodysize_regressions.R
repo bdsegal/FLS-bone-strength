@@ -102,12 +102,9 @@ dataSub$errors <- with(dataSub, bodysize - expectedVals)
 residFit <- lm(log(errors^2) ~ log(expectedVals), data = dataSub)
 coef(residFit)
 
-      # (Intercept) log(expectedVals) 
-       # -10.049502          1.737098 
 
 # 95% confidence interval
 coef(residFit)[2] + c(-1, 1) * 1.96 * sqrt(vcov(residFit)[2, 2])
-# [1] 1.008372 2.465828
 
 overlay(data$bodysize[which(data$targage==8)],b=40)
 overlay(data$bodysize[which(data$targage==10)],b=40)
@@ -171,9 +168,7 @@ bodysizePlot <- data.frame(skelage=rep(skelSeq,3),
 dev.new(height = 5, width = 8)
 ggplot(aes(x=skelage, y=bodysize, color=Sex, linetype=Sex),
   data=bodysizePlot)+
-  # [which(bodysizePlot$Sex %in% c("Male","Female")),])+
   geom_line(size=1)+
-  # geom_line(color="black", size=1, linetype="solid", data=bodysizePlot[which(bodysizePlot$Sex=="avg"),])+
   theme_bw(22)+
   labs(x="Skeletal age", y="Body size")+
   scale_color_manual("",values=c("red","blue","black"))+

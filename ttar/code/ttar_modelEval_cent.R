@@ -57,12 +57,6 @@ aic <- data.frame(model=c("m1ttarCent",
                         AIC(m5ttarCent$lme))
   )
 aic
-#        model       aic
-# 1 m1ttarCent -27573.17
-# 2 m2ttarCent -29539.45
-# 3 m3ttarCent -27546.13
-# 4 m4ttarCent -29510.17
-# 5 m5ttarCent -28083.29
 
 Rsq <- sapply(list(m1ttarCent$gam,
                    m2ttarCent$gam,
@@ -71,8 +65,6 @@ Rsq <- sapply(list(m1ttarCent$gam,
                    m5ttarCent$gam),
               function(x){summary(x)$r.sq})
 round(Rsq, 3)
-# [1] 0.702 0.702 0.702 0.702 0.703
-
 
 summary(m1ttarCent$gam)
 plot(m1ttarCent$gam, scheme=1)
@@ -107,7 +99,6 @@ dataSub$ttarHat <- exp(predict(m1ttarCent$lme))
 
 dataSubphv <- dataSub[which(!is.na(dataSub$phvage)),]
 max(dataSubphv$birthday)
-# 1995.562
 
 dataMelt <- melt(dataSub[,c("skelage","ptno","birthday","ttar","ttarHat","sex")],
                  measure.vars=c("ttar","ttarHat"),
@@ -144,16 +135,10 @@ ggsave(file.path(paperPath, "m1ttarPc.png"))
 # averages over all ages
 minAge <- 8
 mean(pc$simFemale[which(pc$skelagePred >= minAge),])*100
-# [1] -8.304963
 quantile(pc$simFemale[which(pc$skelagePred >= minAge),], c(alpha/2, 1-alpha/2))*100
-#       2.5%      97.5% 
-# -12.387558  -3.741856 
 
 mean(pc$simMale[which(pc$skelagePred >= minAge),])*100
-# [1] -11.26236
 quantile(pc$simMale[which(pc$skelagePred >= minAge),], c(alpha/2, 1-alpha/2))*100
-#       2.5%      97.5% 
-# -15.382021  -6.744958
 
 # separate plots for males and females
 dev.new(height=3.5, width=3.9)

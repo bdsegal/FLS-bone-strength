@@ -129,11 +129,3 @@ fitTable <- data.frame(model = paste0("m", 1:7),
                                       Rsq(m7)), 2),
                        mse = signif(mse, 2))
 fitTable
-#   model   aic  Rsq  mse
-# 1    m1 44674 0.90 10.0
-# 2    m2 44677 0.90 10.0
-# 3    m3 44633 0.89 11.0
-# 4    m4 43915 0.90  9.7
-# 5    m5 44096 0.90  9.7
-# 6    m6 44671 0.89 11.0
-# 7    m7 44767 0.89 11.0

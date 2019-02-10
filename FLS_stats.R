@@ -49,16 +49,8 @@ colnames(sampleStats) <- c("all", "analyzed")
 rownames(sampleStats) <- c("subjects", "male", "female", 
   "families", "total observations")
 sampleStats
-#                      all analyzed
-# subjects            1204     1093
-# male                 619      559
-# female               585      534
-# families             209      177
-# total observations 16937    10280
 
 table(dataSub$sex)
-# Female   Male 
-#   4894   5386
 
 obsPerSubj <- summarise(group_by(dataSub, ptno),
     count = n(),
@@ -75,37 +67,17 @@ obsPerSubj$birthdayPre1995 <- (obsPerSubj$birthday < 1995)
 
 # number of subjects with missing phvage (TRUE=missing)
 table(is.na(obsPerSubj$phvage))
-# FALSE  TRUE 
-#   689   404 
 
 xtabs(~ isnaPhvage + sex, data=obsPerSubj)
-#           sex
-# isnaPhvage Female Male
-#      FALSE    346  343
-#      TRUE     188  216
 
 # number of observations with missing phvage (TRUE=missing)
-table(is.na(dataSub$phvage))
-# FALSE  TRUE 
-#  8895  1385 
+table(is.na(dataSub$phvage)) 
 
 xtabs(~ isnaPhvage + sex, data=dataSub)
-#           sex
-# isnaPhvage Female Male
-#      FALSE   4290 4605
-#      TRUE     604  781
 
 xtabs(~ isnaPhvage + birthdayPre1995, data=obsPerSubj)
-#           birthdayPre1995
-# isnaPhvage FALSE TRUE
-#      FALSE     5  684
-#      TRUE    101  303
 
 xtabs(~ isnaPhvage + birthdayPre1995, data=dataSub)
-#           birthdayPre1995
-# isnaPhvage FALSE TRUE
-#      FALSE    37 8858
-#      TRUE    315 1070
 
 ggplot(aes(x = count), data=obsPerSubj) +
     geom_histogram(breaks=0:max(obsPerSubj$count))+
@@ -125,9 +97,6 @@ for (i in 1:nrow(uniq)){
     ptnoTemp <- uniq$ptno[i]
     uniq$birthyear[i] <- dataSub$birthyear[which(dataSub$ptno==ptnoTemp)][1]
 }
-
-# change NA to 999 to make sure all subjects are counted
-# uniq[which(is.na(uniq$pedno)),"pedno"] <- 999
 
 # make matrix for plotting
 yrRange <- with(uniq,c(min(birthyear),max(birthyear)))
@@ -165,7 +134,6 @@ pheatmap(pedByBirth,
     color=colors(6),fontsize_col=12,
     annotation_names_row=TRUE,
     cex=1.2)
-    # main="Counts: pedigree (row) by birth year (column)")
 dev.off()
 
 range(dataSub$birthday)

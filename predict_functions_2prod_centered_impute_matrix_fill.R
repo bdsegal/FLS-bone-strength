@@ -10,9 +10,6 @@ library(reshape2)
 # (might already be loaded)
 load(file.path(dataPrepPath,"b1.Rdata"))
 
-# phvageMeanSex <- tapply(dataSub$phvage, dataSub$sex, mean, na.rm=TRUE)
-# phvageCentSex <- phvageMeanSex-mean(dataSub$phvage, na.rm=TRUE)
-
 ## multivariaten normal random sampling, from Wood
 rmvn <- function(n,mu,sig) { ## MVN random deviates
   L <- mroot(sig); m <- ncol(L);

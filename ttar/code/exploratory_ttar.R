@@ -78,5 +78,3 @@ dataSub$errors <- with(dataSub, ttar - expectedVals)
 
 m1 <- lm(log(dataSub$errors^2) ~ log(dataSub$expectedVals))
 coef(m1)
-              # (Intercept) log(dataSub$expectedVals) 
-              #   -7.270134                  1.944297 

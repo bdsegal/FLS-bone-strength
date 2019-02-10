@@ -46,12 +46,6 @@ aic <- data.frame(model=1:5,
                         AIC(m4scale$lme),
                         AIC(m5scale$lme)))
 round(aic)
-  # model    aic
-# 1     1 -18267
-# 2     2 -19723
-# 3     3 -18245
-# 4     4 -19698
-# 5     5 -18641
 
 data.frame(model = 1:5,
            adjRsq = round(c(summary(m1scale$gam)$r.sq,
@@ -59,12 +53,6 @@ data.frame(model = 1:5,
                             summary(m3scale$gam)$r.sq,
                             summary(m4scale$gam)$r.sq,
                             summary(m5scale$gam)$r.sq), 2))
-#   model adjRsq
-# 1     1   0.72
-# 2     2   0.72
-# 3     3   0.72
-# 4     4   0.72
-# 5     5   0.73
 
 # variance components
 vc <- VarCorr(m1scale$lme)
@@ -87,11 +75,6 @@ vc <- VarCorr(m5scale$lme)
 nvc <- nrow(vc)
 vc[(nvc-5):nvc,]
 
-# conclusion: m2 is preferred model based on AIC
-# (random intercept for subject and pedigree, random slope for subject)
-# however, some instability, depending on optimization method, and if phvage is added
-# also, estimate of variance for slope is negligible
-
 # other diagnostics -----------------------------------------------------------
 beta <- cbind(coef(m1scale$gam),
               coef(m2scale$gam),
@@ -101,7 +84,6 @@ beta <- cbind(coef(m1scale$gam),
 
 matplot(beta)
 matplot(log(abs(beta),10))
-
 
 plot(m1scale$gam, scheme=1)
 plot(m2scale$gam, scheme=1)

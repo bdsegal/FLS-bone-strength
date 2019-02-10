@@ -74,30 +74,8 @@ fitPhvRandPed <- lmer(phvage ~ birthday*male + (1|pedno), data=dataSub)
 
 cbind(lm=AIC(fitPhv), lmer=AIC(fitPhvRandPed))
 cbind(fixedEffect=fixef(fitPhvRandPed)[1], randomVariance=as.numeric(VarCorr(fitPhvRandPed)$pedno^2))
-#             fixedEffect randomVariance
-# (Intercept)    28.02805       0.930322
 
 summary(fitPhv)
-# Call:
-# lm(formula = phvage ~ birthday * male, data = dataSub)
-
-# Residuals:
-    # Min      1Q  Median      3Q     Max 
-# -4.4463 -0.5950  0.0838  0.7043  2.8583 
-
-# Coefficients:
-               # Estimate Std. Error t value Pr(>|t|)    
-# (Intercept)   21.099251   2.002271  10.538  < 2e-16 ***
-# birthday      -0.004888   0.001023  -4.779 1.79e-06 ***
-# male           9.652101   2.846108   3.391 0.000699 ***
-# birthday:male -0.003851   0.001454  -2.649 0.008091 ** 
-# ---
-# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-# Residual standard error: 1.063 on 8891 degrees of freedom
-  # (1385 observations deleted due to missingness)
-# Multiple R-squared:  0.5005,    Adjusted R-squared:  0.5003 
-# F-statistic:  2969 on 3 and 8891 DF,  p-value: < 2.2e-16
 
 # get variance of predicted phvage
 sigma <- summary(fitPhv)$sigma
@@ -155,8 +133,6 @@ save(m1centPhvageImpute, file="m1centPhvageImpute.Rdata")
 
 load("m1centPhvageImpute.Rdata")
 
-# fit0 <- m1centPhvageImpute
-
 summary(m1centPhvageImpute$gam)
 AIC(m1centPhvageImpute$lme)
 plot(m1centPhvageImpute$gam, scheme=1)
@@ -164,13 +140,11 @@ concurvity(m1centPhvageImpute$gam)
 gam.check(m1centPhvageImpute$gam)
 plot(m1centPhvageImpute$lme)
 
-
 # m1cent
 dataSub$joRhat <- exp(predict(m1centPhvageImpute$lme))
 
 dataMelt <- melt(dataSub[,c("skelage","ptno","birthday","joR","joRhat","sex")],
   measure.vars=c("joR","joRhat"),
-  # variable.name="joR"
   value.name="BSI"
   )
 levels(dataMelt$variable) <- c("Observed", "Predicted")

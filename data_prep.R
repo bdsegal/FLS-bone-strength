@@ -35,7 +35,6 @@ if("dataSub.Rdata" %in% list.files(file.path(path))) {
 
   # number of observations removed (assumed missing completely at random)
   nrow(dataSub) - length(keep)
-  # [1] 37
 
   # view subjects with missing data
   # remove <- which(!complete.cases(dataSub[,c("skelage","birthday","bodysize","male", "ptno",
@@ -97,7 +96,6 @@ if("dataSub.Rdata" %in% list.files(file.path(path))) {
   dataSub$R <- dataSub$mc2tmd / 2
   dataSub$r <- with(dataSub, (R^4 - 2 / pi * R * joR)^(1/4))
   dataSub$cortArea <- with(dataSub, pi * (R^2 - r^2))
-
 
   save(dataSub, file=file.path(path,"dataSub.Rdata"))
 }

@@ -133,16 +133,12 @@ ggsave(file.path(paperPath, "m1pc_joR.png"))
 # averages over all ages
 minAge <- 8
 mean(pc$simFemale[which(pc$skelagePred >= minAge),])*100
-# [1] -13.80297
-quantile(pc$simFemale[which(pc$skelagePred >= minAge),], c(alpha/2, 1-alpha/2))*100
-#       2.5%      97.5% 
-# -19.824719  -7.254802 
+
+quantile(pc$simFemale[which(pc$skelagePred >= minAge),], c(alpha/2, 1-alpha/2))*100 
 
 mean(pc$simMale[which(pc$skelagePred >= minAge),])*100
-# [1] -18.09804
+
 quantile(pc$simMale[which(pc$skelagePred >= minAge),], c(alpha/2, 1-alpha/2))*100
-#      2.5%     97.5% 
-# -23.81684 -11.87419 
 
 # separate plots for males and females
 dev.new(height=3.5, width=3.9)
@@ -253,7 +249,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -270,7 +265,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -291,7 +285,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
         x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -311,7 +304,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
      labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
         x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -333,7 +325,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -349,7 +340,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -368,7 +358,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+ 
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -386,7 +376,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+ 
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -408,7 +398,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -424,7 +413,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -443,8 +431,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -462,8 +449,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+ 
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -485,7 +471,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -501,7 +486,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -520,8 +504,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -539,8 +522,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,1995,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -562,7 +544,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1990,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -578,7 +559,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,1990,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -597,8 +577,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,1990,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -616,8 +595,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,1990,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990"))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -638,7 +616,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -654,7 +631,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -673,8 +649,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -692,8 +667,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -715,7 +689,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -730,7 +703,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -748,8 +720,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -766,8 +737,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -787,7 +757,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -803,7 +772,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="BSI", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -822,8 +790,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -841,8 +808,7 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     facet_grid(~skelage)+
     labs(y=expression(paste(partialdiff," BSI / ", 
           partialdiff," birthdate", sep="")), 
-        x="Birthdate")+      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
+        x="Birthdate")+
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -879,14 +845,13 @@ i=1
 # colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, seq(0,1,.001)))]
 cuts <- cut(t(out$z[[i]]$mean), quantile(t(out$z[[i]]$mean), seq(0,1,.001)))
 
-# manually fix one cell, which is showing as NA -- I'm not sure why
+# manually fix one cell, which is showing as NA
 breakPoints <- cbind(lower = as.numeric( sub("\\((.+),.*", "\\1", levels(cuts)) ),
       upper = as.numeric( sub("[^,]*,([^]]*)\\]", "\\1", levels(cuts)) ))
 index <- which(t(out$z[[i]]$mean)[2,1] > breakPoints[,1] & t(out$z[[i]]$mean)[2,1] <= breakPoints[,2])
 cuts[71] <- levels(cuts)[index]
 
 colors <- heat.colors(1000)[cuts]
-# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
 zMinMax <- c(30, 140)
 
 png(file.path(paperPath,"m1MaleMean_joR_3d.png"))
@@ -898,16 +863,14 @@ dev.off()
 
 # females
 i=2
-# colors <- heat.colors(1000)[cut(out$z[[i]]$mean, quantile(out$z[[i]]$mean, seq(0,1,.001)))]
 cuts <- cut(t(out$z[[i]]$mean), quantile(t(out$z[[i]]$mean), seq(0,1,.001)))
 
-# manually fix one cell, which is showing as NA -- I'm not sure why
+# manually fix one cell, which is showing as NA
 breakPoints <- cbind(lower = as.numeric( sub("\\((.+),.*", "\\1", levels(cuts)) ),
       upper = as.numeric( sub("[^,]*,([^]]*)\\]", "\\1", levels(cuts)) ))
 index <- which(t(out$z[[i]]$mean)[2,1] > breakPoints[,1] & t(out$z[[i]]$mean)[2,1] <= breakPoints[,2])
 cuts[71] <- levels(cuts)[index]
 colors <- heat.colors(1000)[cuts]
-# zMinMax <- c(min(out$z[[i]]$l), max(out$z[[i]]$u))
 zMinMax <- c(30, 140)
 
 png(file.path(paperPath,"m1FemaleMean_joR_3d.png"))

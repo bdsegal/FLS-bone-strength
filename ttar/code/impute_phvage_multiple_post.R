@@ -190,7 +190,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="Total area", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -206,7 +205,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     theme_bw(17)+
     facet_grid(~skelage)+
     labs(y="Total area", x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -264,7 +262,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     labs(y=expression(paste(partialdiff," Total area / ", 
           partialdiff," birthdate", sep="")), 
         x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -284,7 +281,6 @@ ggplot(aes(x=birthday, y=mean), data=slice)+
     labs(y=expression(paste(partialdiff," Total area / ", 
           partialdiff," birthdate", sep="")), 
         x="Birthdate")+
-      # title=paste("Male ", (1-out$alpha)*100, "% credible intervals", sep="")
     scale_x_continuous(breaks=seq(1930,2000,10),
       labels=c("1930", "", "1950", "", "1970", "", "1990",""))+
     theme(axis.text.x = element_text(angle=45, hjust = 1, vjust=1))+
@@ -332,9 +328,7 @@ ggAll <- ggplot(aes(x=skelage, y=mean*100), data=zAll)+
   geom_line(aes(y=u*100),linetype="dashed")+
   theme_bw(16)+
   facet_wrap(~comparison)+
-  labs(
-    # title= paste("Percent change ", initialBirthday, " to ", endBirthday, ": ",(1-alpha)*100, "% credible intervals", sep=""),
-    y="Percent change in\ntotal area", x="Skeletal age")+
+  labs(y="Percent change in\ntotal area", x="Skeletal age")+
   geom_hline(yintercept=0,color="red")+
   scale_x_continuous(breaks=seq(min(skelagePredPc), max(skelagePredPc), 2))+
   scale_y_continuous(breaks=seq(-30,30,5))

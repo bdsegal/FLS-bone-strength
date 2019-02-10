@@ -78,8 +78,6 @@ dataSub$errors <- with(dataSub, joR - expectedVals)
 
 residFit <- lm(log(dataSub$errors^2) ~ log(dataSub$expectedVals))
 coef(residFit)
-      # (Intercept) log(dataSub$expectedVals) 
-      #   -6.250598                  1.935344 
 
 normalOverlay(log(data$joR[which(data$targage==8 & data$sex == "Male")]), "log(BSI)")
 normalOverlay(log(data$joR[which(data$targage==18 & data$sex == "Male")]), "log(BSI)")

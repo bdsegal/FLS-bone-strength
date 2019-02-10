@@ -31,6 +31,14 @@ source(file.path(dataPrepPath,"predict_functions_2prod_centered.R"))
 # prep/load data
 source(file.path(dataPrepPath,"data_prep.R"))
 
+# save analytic dataset for main analyses
+main_analysis_data <- dataSub %>%
+  select(pedno, ptno, joR, skelage, birthday, male, bodysizeCentered)
+
+write.csv(main_analysis_data,
+          row.names = FALSE, 
+          file = file.path(path, "main_analysis_data.cvs"))
+
 # 1) Different random effect structures ---------------------------------------
 
 # random intercept for subject and pedigree
@@ -211,7 +219,6 @@ m1centPre1990 <- gamm(joR ~
 				data=dataSub[which(dataSub$birthday <=1990),])
 save(m1centPre1990, file="m1centPre1990.Rdata")
 
-
   dataSub$post1990andNotMiss <- with(dataSub, birthday>=1990 & !is.na(phvage))
   sub <- dataSub[dataSub$post1990andNotMiss,]
 
@@ -224,16 +231,12 @@ save(m1centPre1990, file="m1centPre1990.Rdata")
   sub <- dataSub[dataSub$post1990,]
 
   nrow(sub)
-  # [1] 786
   length(unique(sub$ptno))
-  # [1] 192
 
 dataSub$remove <- with(dataSub, birthday >=1990 & birthday <=1995)
   sub <- dataSub[dataSub$remove,]
   nrow(sub)
-  # [1] 434
   length(unique(sub$ptno))
-  # [1] 86
 
 m1centRemove1990_1995 <- gamm(joR ~ 
 				te(skelage, birthday, k=c(5,5), bs="cr")+
@@ -251,12 +254,10 @@ dataSub <- as.data.frame(mutate(group_by(dataSub,pedno),
 )
 
 max(dataSub[which(dataSub$firstPedBY <=1950),"birthday"])
-# [1] 2004.704
 sub <- dataSub[which(dataSub$firstPedBY <=1950),]
 nrow(sub)
-# 8242
 length(unique(sub$ptno))
-# 867
+
 m1centPedPre1950 <- gamm(joR ~ 
 				te(skelage, birthday, k=c(5,5), bs="cr")+
 				te(skelage, birthday, k=c(5,5), by=male, bs="cr")+
@@ -281,7 +282,6 @@ m1centNoOutliers <- gamm(joR ~
 save(m1centNoOutliers, file="m1centNoOutliers.Rdata")
 
 # restricting BMI
-
 bmiGrowth <- read.csv("http://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv",
   stringsAsFactors=FALSE)
 # there is one row of text in the middle of the file
@@ -306,13 +306,10 @@ for (i in 1:nrow(dataSub)){
 dataSub$bmiObsFlag <- with(dataSub, (bmi <= bmi5 | bmi >= bmi95)*1)
 dataSub[which(is.na(dataSub$bmiObsFlag)),]
 max(dataSub[which(!dataSub$bmiObsFlag),"birthday"])
-# [1] 2004.704
 
 sub <- dataSub[which(!dataSub$bmiObsFlag),]
 nrow(sub)
-# 9281
 length(unique(sub$ptno))
-# 1039
 
 m1centRestrictBMI <- gamm(joR ~ 
 				te(skelage, birthday, k=c(5,5), bs="cr")+
@@ -323,4 +320,3 @@ m1centRestrictBMI <- gamm(joR ~
 				random=list(pedno=~1, ptno=~1),
 				data=dataSub[which(dataSub$bmiObsFlag == 0),])
 save(m1centRestrictBMI, file="m1centRestrictBMI.Rdata")
-
